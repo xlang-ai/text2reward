@@ -10,9 +10,12 @@
     <br/>
 </p>
 Code for paper [Text2Reward: Automated Dense Reward Function Generation for Reinforcement Learning](https://arxiv.org/abs/2309.11489).
-Coming soon...
 
-
+```shell
+cd ManiSkill2
+pip install -e .
+pip install gym==0.21.0
+```
 
 ## Citation
 If you find our work helpful, please cite us:
