@@ -193,17 +193,15 @@ def download(
     try:
         if verbose:
             print(f"Downloading {url}")
-            pbar = tqdm(unit="iB", unit_scale=True, unit_divisor=1024)
+        pbar = tqdm(unit="iB", unit_scale=True, unit_divisor=1024)
 
         def show_progress(blocknum, bs, size):
-            if verbose:
-                if blocknum == 0:
-                    pbar.total = size
-                pbar.update(bs)
+            if blocknum == 0:
+                pbar.total = size
+            pbar.update(bs)
 
         filename, _ = urllib.request.urlretrieve(url, reporthook=show_progress)
-        if verbose:
-            pbar.close()
+        pbar.close()
     except URLError as err:
         print(f"Failed to download {url}")
         raise err
@@ -230,7 +228,7 @@ def download(
     return output_path
 
 
-def parse_args(args=None):
+def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "uid",
@@ -244,10 +242,11 @@ def parse_args(args=None):
     parser.add_argument(
         "-o", "--output-dir", type=str, help="Directory to save assets."
     )
-    return parser.parse_args(args)
+    return parser.parse_args()
 
 
-def main(args):
+def main():
+    args = parse_args()
     verbose = not args.quiet
 
     initialize_sources()
@@ -259,8 +258,7 @@ def main(args):
         return
 
     if args.uid == "all":
-        if verbose:
-            print("All assets will be downloaded. This may take a while.")
+        print("All assets will be downloaded. This may take a while.")
         uids = list(DATA_SOURCES.keys())
         show_progress = True
     elif args.uid in DATA_GROUPS:
@@ -273,7 +271,7 @@ def main(args):
         raise KeyError("{} not found.".format(args.uid))
 
     for i, uid in enumerate(uids):
-        if show_progress and verbose:
+        if show_progress:
             print("Downloading assets for {}: {}/{}".format(args.uid, i + 1, len(uids)))
 
         kwargs = DATA_SOURCES[uid].copy()
@@ -290,5 +288,4 @@ def main(args):
 
 
 if __name__ == "__main__":
-    args = parse_args()
-    main(args)
+    main()

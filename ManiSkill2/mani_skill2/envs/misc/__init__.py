@@ -1,1 +1,2 @@
-from . import avoid_obstacles, turn_faucet
+from . import turn_faucet
+from . import avoid_obstacles

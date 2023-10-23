@@ -1,6 +1,6 @@
 from typing import Any, List, Optional, Sequence, Tuple, Type, Union
 
-import gymnasium as gym
+import gym
 import numpy as np
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv as SB3VecEnv
 from stable_baselines3.common.vec_env.base_vec_env import (
@@ -23,33 +23,24 @@ def select_index_from_dict(data: dict, i: int):
 
 
 class SB3VecEnvWrapper(SB3VecEnv):
-    """A wrapper for ManiSkill2 VecEnv to make it compatible with SB3 VecEnv"""
+    """A wrapper for SB3 VecEnv to make it compatible with ManiSkill2 VecEnv."""
 
     def __init__(self, venv: VecEnv):
-        super().__init__(
-            venv.num_envs, venv.single_observation_space, venv.single_action_space
-        )
+        super().__init__(venv.num_envs, venv.observation_space, venv.action_space)
         self.venv = venv
-        self._last_seed = None
 
     def seed(self, seed: Optional[int] = None) -> List[Union[None, int]]:
-        self._last_seed = seed
+        return self.venv.seed(seed)
 
     def reset(self) -> VecEnvObs:
-        obs = self.venv.reset(seed=self._last_seed)[0]
-        self._last_seed = None  # use seed from call to seed() once
-        return obs
+        return self.venv.reset()
 
     def step_async(self, actions: np.ndarray) -> None:
         return self.venv.step_async(actions)
 
     def step_wait(self) -> VecEnvStepReturn:
-        vec_obs, rews, terminations, truncations, infos = self.venv.step_wait()
-        for env_idx in range(self.num_envs):
-            infos[env_idx]["TimeLimit.truncated"] = (
-                truncations[env_idx] and not terminations[env_idx]
-            )
-        dones = terminations | truncations
+        vec_obs, rews, dones, infos = self.venv.step_wait()
+
         if not dones.any():
             return vec_obs, rews, dones, infos
 
@@ -59,8 +50,7 @@ class SB3VecEnvWrapper(SB3VecEnv):
                 infos[i]["terminal_observation"] = select_index_from_dict(vec_obs, i)
 
         reset_indices = np.where(dones)[0]
-
-        vec_obs = self.venv.reset(indices=reset_indices)[0]
+        vec_obs = self.venv.reset(indices=reset_indices)
         return vec_obs, rews, dones, infos
 
     def close(self) -> None:

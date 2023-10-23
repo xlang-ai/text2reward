@@ -3,7 +3,7 @@ import argparse
 import os.path as osp
 from pathlib import Path
 
-import gymnasium as gym
+import gym
 import h5py
 import numpy as np
 import torch as th
@@ -50,15 +50,12 @@ def convert_observation(observation):
     return obs
 
 
-def rescale_rgbd(rgbd, scale_rgb_only=False):
+def rescale_rgbd(rgbd):
     # rescales rgbd data and changes them to floats
     rgb1 = rgbd[..., 0:3] / 255.0
     rgb2 = rgbd[..., 4:7] / 255.0
-    depth1 = rgbd[..., 3:4]
-    depth2 = rgbd[..., 7:8]
-    if not scale_rgb_only:
-        depth1 = rgbd[..., 3:4] / (2**10)
-        depth2 = rgbd[..., 7:8] / (2**10)
+    depth1 = rgbd[..., 3:4] / (2**10)
+    depth2 = rgbd[..., 7:8] / (2**10)
     return np.concatenate([rgb1, depth1, rgb2, depth2], axis=-1)
 
 
@@ -218,7 +215,7 @@ def parse_args():
         help="path for where logs, checkpoints, and videos are saved",
     )
     parser.add_argument(
-        "--steps", type=int, help="number of training steps", default=8000
+        "--steps", type=int, help="numbr of training steps", default=30000
     )
     parser.add_argument(
         "--eval", action="store_true", help="whether to only evaluate policy"
@@ -242,20 +239,17 @@ def main():
 
     obs_mode = "rgbd"
     control_mode = "pd_ee_delta_pose"
+    reward_mode = "dense"
     env = gym.make(
-        env_id, obs_mode=obs_mode, control_mode=control_mode, render_mode="cameras"
+        env_id, obs_mode=obs_mode, control_mode=control_mode, reward_mode=reward_mode
     )
     # RecordEpisode wrapper auto records a new video once an episode is completed
-    env = RecordEpisode(
-        env,
-        output_dir=osp.join(log_dir, "eval_videos" if args.eval else "videos"),
-        info_on_video=True,
-    )
-    dataset = ManiSkill2Dataset(demo_path)
+    env = RecordEpisode(env, output_dir=osp.join(log_dir, "videos"))
+
     if args.eval:
         model_path = args.model_path
         if model_path is None:
-            model_path = osp.join(log_dir, "checkpoints/ckpt_latest.pt")
+            model_path = osp.join(log_dir, "models/ckpt_latest.pt")
         # Load the saved model
         policy = th.load(model_path)
     else:
@@ -265,7 +259,7 @@ def main():
         dataset = ManiSkill2Dataset(demo_path)
         dataloader = DataLoader(
             dataset,
-            batch_size=512,
+            batch_size=100,
             num_workers=4,
             pin_memory=True,
             drop_last=True,
@@ -314,14 +308,14 @@ def main():
         return loss.item()
 
     def evaluate_policy(env, policy, num_episodes=10):
-        obs, _ = env.reset()
+        obs = env.reset(seed=0)
         successes = []
         i = 0
         pbar = tqdm(total=num_episodes)
         while i < num_episodes:
-            # convert observation to our desired shape, rescale correctly, and move to appropriate device
+            # convert observation to our desired shape and move to appropriate device
             obs = convert_observation(obs)
-            obs["rgbd"] = rescale_rgbd(obs["rgbd"], scale_rgb_only=True)
+            obs["rgbd"] = rescale_rgbd(obs["rgbd"])
             obs_device = dict()
             # unsqueeze adds an extra batch dimension and we permute rgbd since PyTorch expects the channel dimension to be first
             obs_device["rgbd"] = (
@@ -336,11 +330,11 @@ def main():
             )
             with th.no_grad():
                 action = policy(obs_device).cpu().numpy()[0]
-            obs, reward, terminated, truncated, info = env.step(action)
-            if terminated or truncated:
+            obs, reward, done, info = env.step(action)
+            if done:
                 successes.append(info["success"])
                 i += 1
-                obs, _ = env.reset(seed=i)
+                obs = env.reset(seed=i)
                 pbar.update(1)
         success_rate = np.mean(successes)
         return success_rate

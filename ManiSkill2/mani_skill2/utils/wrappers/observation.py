@@ -2,9 +2,9 @@ from collections import OrderedDict
 from copy import deepcopy
 from typing import Sequence
 
-import gymnasium as gym
+import gym
 import numpy as np
-from gymnasium import spaces
+from gym import spaces
 
 from mani_skill2.utils.common import (
     flatten_dict_keys,
@@ -13,22 +13,7 @@ from mani_skill2.utils.common import (
 )
 
 
-class BaseGymObservationWrapper(gym.ObservationWrapper):
-    """ManiSkill2 uses a custom registration function that uses observation wrappers to change observation mode based on env kwargs.
-    By default gymnasium does not expect custom registration and so creating an with gymnasium may sometimes raise an error as it tries to set the spec of an env
-    which is possible if the registered env is not wrapped.
-    """
-
-    @property
-    def spec(self):
-        return self.unwrapped.spec
-
-    @spec.setter
-    def spec(self, spec):
-        self.unwrapped.spec = spec
-
-
-class RGBDObservationWrapper(BaseGymObservationWrapper):
+class RGBDObservationWrapper(gym.ObservationWrapper):
     """Map raw textures (Color and Position) to rgb and depth."""
 
     def __init__(self, env):
@@ -91,7 +76,7 @@ def merge_dict_spaces(dict_spaces: Sequence[spaces.Dict]):
     return spaces.Dict(OrderedDict(reverse_spaces))
 
 
-class PointCloudObservationWrapper(BaseGymObservationWrapper):
+class PointCloudObservationWrapper(gym.ObservationWrapper):
     """Convert Position textures to world-space point cloud."""
 
     def __init__(self, env):
@@ -169,7 +154,7 @@ class PointCloudObservationWrapper(BaseGymObservationWrapper):
         return observation
 
 
-class RobotSegmentationObservationWrapper(BaseGymObservationWrapper):
+class RobotSegmentationObservationWrapper(gym.ObservationWrapper):
     """Add a binary mask for robot links."""
 
     def __init__(self, env, replace=True):
@@ -208,10 +193,9 @@ class RobotSegmentationObservationWrapper(BaseGymObservationWrapper):
                 pcd_space.spaces["robot_seg"] = new_space
 
     def reset(self, **kwargs):
-        observation, reset_info = self.env.reset(**kwargs)
+        observation = self.env.reset(**kwargs)
         self.robot_link_ids = self.env.robot_link_ids
-        obs = self.observation(observation)
-        return obs, reset_info
+        return self.observation(observation)
 
     def observation_image(self, observation: dict):
         image_obs = observation["image"]
@@ -244,7 +228,7 @@ class RobotSegmentationObservationWrapper(BaseGymObservationWrapper):
         return observation
 
 
-class FlattenObservationWrapper(BaseGymObservationWrapper):
+class FlattenObservationWrapper(gym.ObservationWrapper):
     def __init__(self, env) -> None:
         super().__init__(env)
         self.observation_space = flatten_dict_space_keys(self.observation_space)

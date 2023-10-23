@@ -1,10 +1,9 @@
-import time
-
+from dm_control import suite
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 import PIL.Image as Image
 import tqdm
-from dm_control import suite
 
 num_steps = 10000
 

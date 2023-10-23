@@ -2,9 +2,8 @@ from typing import Dict
 
 import numpy as np
 import sapien.core as sapien
-from sapien.core import Actor, Articulation, Link, Pose
+from sapien.core import Articulation, Actor, Link, Pose
 from scipy.spatial.transform import Rotation
-
 from mani_skill2.utils.bounding_cylinder import aabc
 
 

@@ -5,7 +5,7 @@ from typing import Dict, Union
 
 import numpy as np
 import sapien.core as sapien
-from gymnasium import spaces
+from gym import spaces
 
 from mani_skill2 import format_path
 from mani_skill2.sensors.camera import CameraConfig
@@ -159,7 +159,6 @@ class BaseAgent:
         self.set_control_mode(self._default_control_mode)
 
     def set_action(self, action):
-        if np.isnan(action).any(): raise ValueError("Action cannot be NaN. Environment received:", action)
         self.controller.set_action(action)
 
     def before_simulation_step(self):

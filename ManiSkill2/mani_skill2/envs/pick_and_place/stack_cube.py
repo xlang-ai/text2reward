@@ -123,7 +123,7 @@ class StackCubeEnv(StationaryManipulationEnv):
         success = is_cubeA_on_cubeB and is_cubeA_static and (not is_cubeA_grasped)
 
         return {
-            "is_cubaA_grasped": is_cubeA_grasped,
+            "is_cubeA_grasped": is_cubeA_grasped,
             "is_cubeA_on_cubeB": is_cubeA_on_cubeB,
             "is_cubeA_static": is_cubeA_static,
             # "cubeA_vel": np.linalg.norm(self.cubeA.velocity),
@@ -218,6 +218,3 @@ class StackCubeEnv(StationaryManipulationEnv):
                     reward += np.maximum(reaching_reward2, 0.0)
 
         return reward
-
-    def compute_normalized_dense_reward(self, **kwargs):
-        return self.compute_dense_reward(**kwargs) / 15.0

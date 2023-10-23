@@ -1,4 +1,4 @@
-from typing import Sequence, Union
+from typing import Union, Sequence
 
 import numpy as np
 import sapien.core as sapien
