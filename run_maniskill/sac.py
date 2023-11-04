@@ -4,7 +4,6 @@ import numpy as np
 import mani_skill2.envs
 import wandb
 import argparse
-from IPython import embed
 from wandb.integration.sb3 import WandbCallback
 from stable_baselines3 import SAC
 from stable_baselines3.common.vec_env import SubprocVecEnv, VecMonitor
@@ -35,7 +34,7 @@ class ContinuousTaskWrapper(gym.Wrapper):
 
     def step(self, action):
         ob, rew, done, info = super().step(action)
-        if args.exp_name != "oracle":
+        if args.reward_path is not None:
             rew = self.compute_dense_reward(action)  # TODO: uncomment this line
         self._elapsed_steps += 1
         if self._elapsed_steps >= self._max_episode_steps:

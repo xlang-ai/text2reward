@@ -20,16 +20,60 @@ Please refer to our [project page](https://text-to-reward.github.io/) for more d
 
 
 ## Dependencies
-To establish the environment run this code in the shell:
+To establish the environment, run this code in the shell:
 ```shell
+conda create -n text2reward python=3.7
+conda activate text2reward
 cd ManiSkill2
 pip install -e .
-pip install gym==0.21.0
+pip install stable-baselines3==1.8.0 wandb tensorboard
+bash download_data.sh
+cd ..
+cd Metaworld
+pip install -e .
 ```
-More detailed dependencies will be updated soon...
+
+## TroubleShooting
+
+If you have not installed `mujoco` yet, please follow the instructions from [here](https://github.com/openai/mujoco-py#install-mujoco) to install it:
+
+After that, please try the following command to confirm the successful installation:
+
+```shell
+$ python3
+>>> import mujoco_py
+```
 
 ## Usage
-Detailed usage will be updated soon...
+### Reimplement
+
+To reimplement our experiment results, you can run the following scripts:
+
+**ManiSkill2:**
+
+```shell
+bash run_oracle.sh
+bash run_zero_shot.sh
+bash run_few_shot.sh
+```
+
+It's normal to encounter the following warnings:
+
+```shell
+[svulkan2] [error] GLFW error: X11: The DISPLAY environment variable is missing
+[svulkan2] [warning] Continue without GLFW.
+```
+
+**MetaWorld:**
+
+```shell
+bash run_oracle.sh
+bash run_zero_shot.sh
+```
+
+### Run your own experiment
+
+By default, the `run_oracle.sh` script above uses the expert-written rewards provided by the environment; the `run_zero_shot.sh` and `run_few_shot.sh` scripts use the generated rewards used in our experiments. If you want to run a new experiment based on the reward you provide, just follow the bash script above and modify the `--reward_path` parameter to the path of your own reward.
 
 ## Citation
 
