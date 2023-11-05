@@ -42,7 +42,7 @@ $ python3
 >>> import mujoco_py
 ```
 
-2. If you encounter the following errors when running ManiSkill2, we refer you to read the [doucuments](https://haosulab.github.io/ManiSkill2/getting_started/installation.html#vulkan) provided by ManiSkill2.
+2. If you encounter the following errors when running ManiSkill2, we refer you to read the documents [here](https://haosulab.github.io/ManiSkill2/getting_started/installation.html#vulkan).
    - `RuntimeError: vk::Instance::enumeratePhysicalDevices: ErrorInitializationFailed`
    - `Some required Vulkan extension is not present. You may not use the renderer to render, however, CPU resources will be still available.`
    - `Segmentation fault (core dumped)`
