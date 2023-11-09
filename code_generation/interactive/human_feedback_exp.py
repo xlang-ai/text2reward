@@ -10,11 +10,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--TASK', type=str, default="StackCube-v0")
-    parser.add_argument('--FILE_PATH', type=str, default="results/human_feedback_basic/StackCube-v0")
+    parser.add_argument('--FILE_PATH', type=str, default=None)
 
     args = parser.parse_args()
 
     # File path to save result
+    if args.FILE_PATH == None:
+        args.FILE_PATH = "results/interactive/{}.txt".format(args.TASK)
+
     os.makedirs(args.FILE_PATH, exist_ok=True)
 
     # Load the feedback history

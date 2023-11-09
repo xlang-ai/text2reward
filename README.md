@@ -27,6 +27,7 @@ conda activate text2reward
 cd ManiSkill2
 pip install -e .
 pip install stable-baselines3==1.8.0 wandb tensorboard
+pip install langchain chromadb==0.4.0
 bash download_data.sh
 cd ..
 cd Metaworld
@@ -75,7 +76,25 @@ bash run_oracle.sh
 bash run_zero_shot.sh
 ```
 
-### Run your own experiment
+### Generate new reward code
+
+Firstly please add the following environment variable to your `.bashrc` (or `.zshrc`, etc.).
+
+```shell
+export PYTHONPATH=$PYTHONPATH:~/path/to/text2reward
+```
+
+Then navigate to the directory `text2reward/code_generation/single_flow` and run the following scripts:
+
+```shell
+# generate reward code for Maniskill
+bash run_maniskill_zeroshot.sh
+bash run_maniskill_fewshot.sh
+# generate reward code for MetaWorld
+bash run_metaworld_zeroshot.sh
+```
+
+### Run new experiment
 
 By default, the `run_oracle.sh` script above uses the expert-written rewards provided by the environment; the `run_zero_shot.sh` and `run_few_shot.sh` scripts use the generated rewards used in our experiments. If you want to run a new experiment based on the reward you provide, just follow the bash script above and modify the `--reward_path` parameter to the path of your own reward.
 

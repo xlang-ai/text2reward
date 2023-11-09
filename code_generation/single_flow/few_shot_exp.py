@@ -47,12 +47,16 @@ if __name__ == "__main__":
     # add and parse argument
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--TASK', type=str, default=None)
+    parser.add_argument('--TASK', type=str, default="LiftCube-v0", \
+        help="choose one task from: LiftCube-v0, PickCube-v0, TurnFaucet-v0, OpenCabinetDoor-v1, OpenCabinetDrawer-v1, PushChair-v1")
     parser.add_argument('--FILE_PATH', type=str, default=None)
 
     args = parser.parse_args()
 
     # File path to save result
+    if args.FILE_PATH == None:
+        args.FILE_PATH = "results/maniskill-fewshot/{}.txt".format(args.TASK)
+    
     os.makedirs(args.FILE_PATH, exist_ok=True)
 
     code_generator = FewShotGenerator(

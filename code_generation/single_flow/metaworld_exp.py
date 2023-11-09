@@ -1,4 +1,4 @@
-import os
+import os, argparse
 
 from code_generation.single_flow.zero_shot.generation import ZeroShotGenerator
 from code_generation.single_flow.classlike_prompt.MetaworldPrompt import METAWORLD_PROMPT
@@ -29,20 +29,24 @@ mapping_dicts = {
 
 
 if __name__ == '__main__':
-    # Task to run
-    TASK_SET = [
-    ]
+    parser = argparse.ArgumentParser()
+    
+    parser.add_argument('--TASK', type=str, default="LiftCube-v0", \
+        help="choose one task from: drawer-open-v2, drawer-close-v2, window-open-v2, window-close-v2, button-press-v2, sweep-into-v2, door-unlock-v2, door-close-v2, handle-pull-v2, handle-press-v2, handle-press-side-v2")
+    parser.add_argument('--FILE_PATH', type=str, default=None)
 
-    for TASK in TASK_SET:
-        # File path to save result
-        FILE_PATH = "results/metaworld/{}.txt".format(TASK)
-        os.makedirs(FILE_PATH, exist_ok=True)
+    args = parser.parse_args()
 
-        code_generator = ZeroShotGenerator(METAWORLD_PROMPT)
-        general_code, specific_code = code_generator.generate_code(instruction_mapping[TASK], mapping_dicts)
+    # File path to save result
+    if args.FILE_PATH == None:
+        args.FILE_PATH = "results/metaworld/{}.txt".format(args.TASK)
+    os.makedirs(args.FILE_PATH, exist_ok=True)
 
-        with open(os.path.join(FILE_PATH, "general.py"), "w") as f:
-            f.write(general_code)
+    code_generator = ZeroShotGenerator(METAWORLD_PROMPT)
+    general_code, specific_code = code_generator.generate_code(instruction_mapping[args.TASK], mapping_dicts)
 
-        with open(os.path.join(FILE_PATH, "specific.py"), "w") as f:
-            f.write(specific_code)
+    with open(os.path.join(args.FILE_PATH, "general.py"), "w") as f:
+        f.write(general_code)
+
+    with open(os.path.join(args.FILE_PATH, "specific.py"), "w") as f:
+        f.write(specific_code)
