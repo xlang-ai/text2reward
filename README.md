@@ -22,16 +22,22 @@ Please refer to our [project page](https://text-to-reward.github.io/) for more d
 ## Dependencies
 To establish the environment, run this code in the shell:
 ```shell
+# set up conda
 conda create -n text2reward python=3.7
 conda activate text2reward
+# set up ManiSkill2 environment
 cd ManiSkill2
 pip install -e .
 pip install stable-baselines3==1.8.0 wandb tensorboard
-pip install langchain chromadb==0.4.0
+cd ..
+cd run_maniskill
 bash download_data.sh
+# set up MetaWorld environment
 cd ..
 cd Metaworld
 pip install -e .
+# set up code generation
+pip install langchain chromadb==0.4.0
 ```
 
 ## TroubleShooting
