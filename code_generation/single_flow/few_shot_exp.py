@@ -1,10 +1,11 @@
-import os, argparse
+import argparse
+import os
 
-from code_generation.single_flow.few_shot.generation import FewShotGenerator
-from code_generation.single_flow.zero_shot_exp import instruction_mapping, mapping_dicts_mapping, \
-    LiftCube_Env, PickCube_Env, StackCube_Env, TurnFaucet_Env
 from code_generation.single_flow.classlike_prompt import PANDA_PROMPT_FOR_FEW_SHOT, MOBILE_PANDA_PROMPT_FOR_FEW_SHOT, \
     MOBILE_DUAL_ARM_PROMPT_FOR_FEW_SHOT
+from code_generation.single_flow.few_shot.generation import FewShotGenerator
+from code_generation.single_flow.zero_shot_exp import instruction_mapping, mapping_dicts_mapping, LiftCube_Env, \
+    PickCube_Env, StackCube_Env, TurnFaucet_Env
 
 few_shot_prompt_mapping = {
     "LiftCube-v0": PANDA_PROMPT_FOR_FEW_SHOT.replace("<environment_description>", LiftCube_Env),
@@ -25,6 +26,7 @@ gold_reward_path_mapping = {
     "OpenCabinetDrawer-v1": "open_cabinet_drawer",
     "PushChair-v1": "push_chair",
 }
+
 
 def load_all_examples(current_task: str, verbose=True):
     examples = []
@@ -48,23 +50,26 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--TASK', type=str, default="LiftCube-v0", \
-        help="choose one task from: LiftCube-v0, PickCube-v0, TurnFaucet-v0, OpenCabinetDoor-v1, OpenCabinetDrawer-v1, PushChair-v1")
+                        help="choose one task from: LiftCube-v0, PickCube-v0, TurnFaucet-v0, OpenCabinetDoor-v1, OpenCabinetDrawer-v1, PushChair-v1")
     parser.add_argument('--FILE_PATH', type=str, default=None)
+    parser.add_argument('--MODEL_NAME', type=str, default="gpt-4")
 
     args = parser.parse_args()
 
     # File path to save result
     if args.FILE_PATH == None:
-        args.FILE_PATH = "results/maniskill-fewshot/{}.txt".format(args.TASK)
-    
+        args.FILE_PATH = "results/{}/maniskill-fewshot/{}.txt".format(args.MODEL_NAME, args.TASK)
+
     os.makedirs(args.FILE_PATH, exist_ok=True)
 
     code_generator = FewShotGenerator(
         few_shot_prompt_mapping[args.TASK],
+        args.MODEL_NAME,
         examples=load_all_examples(current_task=args.TASK),
-        k_examples=1
+        k_examples=1,
     )
-    general_code, specific_code = code_generator.generate_code(instruction_mapping[args.TASK], mapping_dicts_mapping[args.TASK], )
+    general_code, specific_code = code_generator.generate_code(instruction_mapping[args.TASK],
+                                                               mapping_dicts_mapping[args.TASK], )
 
     with open(os.path.join(args.FILE_PATH, "general.py"), "w") as f:
         f.write(general_code)

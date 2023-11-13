@@ -163,16 +163,17 @@ if __name__ == '__main__':
     parser.add_argument('--TASK', type=str, default="LiftCube-v0", \
         help="choose one task from: LiftCube-v0, PickCube-v0, TurnFaucet-v0, OpenCabinetDoor-v1, OpenCabinetDrawer-v1, PushChair-v1")
     parser.add_argument('--FILE_PATH', type=str, default=None)
+    parser.add_argument('--MODEL_NAME', type=str, default="gpt-4")
 
     args = parser.parse_args()
 
     # File path to save result
     if args.FILE_PATH == None:
-        args.FILE_PATH = "results/maniskill-zeroshot/{}.txt".format(args.TASK)
+        args.FILE_PATH = "results/{}/maniskill-zeroshot/{}.txt".format(args.MODEL_NAME, args.TASK)
 
     os.makedirs(args.FILE_PATH, exist_ok=True)
 
-    code_generator = ZeroShotGenerator(prompt_mapping[args.TASK])
+    code_generator = ZeroShotGenerator(prompt_mapping[args.TASK], args.MODEL_NAME)
     general_code, specific_code = code_generator.generate_code(instruction_mapping[args.TASK], mapping_dicts_mapping[args.TASK])
 
     with open(os.path.join(args.FILE_PATH, "general.py"), "w") as f:
