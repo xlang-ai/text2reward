@@ -122,4 +122,4 @@ If you find our work helpful, please cite us:
 <a href="https://github.com/Hilbert-Johnson">  <img src="https://avatars.githubusercontent.com/u/77528902?v=4"  width="50" /></a>
 <a href="https://github.com/ChenWu98"><img src="https://avatars.githubusercontent.com/u/28187501?v=4"  width="50" /></a>
 <a href="https://github.com/taogoddd">  <img src="https://avatars.githubusercontent.com/u/98326623?v=4"  width="50" /></a>
-<a href="https://qianluo.netlify.app/"><img src="https://qianluo.netlify.app/author/qian-luo/avatar_hu5e5a95a93d56ec8418a5a4471effb4fb_2337021_270x270_fill_q75_lanczos_center.jpg"  width="50" /></a>
+<a href="https://qianluo.netlify.app/"><img src="https://avatars.githubusercontent.com/u/58158769?v=4"  width="50" /></a>
