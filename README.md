@@ -109,11 +109,10 @@ By default, the `run_oracle.sh` script above uses the expert-written rewards pro
 If you find our work helpful, please cite us:
 
 ```bibtex
-@article{text2reward,
-  title={Text2Reward: Automated Dense Reward Function Generation for Reinforcement Learning},
+@inproceedings{xietext2reward,
+  title={Text2Reward: Reward Shaping with Language Models for Reinforcement Learning},
   author={Xie, Tianbao and Zhao, Siheng and Wu, Chen Henry and Liu, Yitao and Luo, Qian and Zhong, Victor and Yang, Yanchao and Yu, Tao},
-  journal={arXiv preprint arXiv:2309.11489},
-  year={2023}
+  booktitle={The Twelfth International Conference on Learning Representations}
 }
 ```
 
