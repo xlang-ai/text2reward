@@ -1,4 +1,4 @@
-# Text2Reward: Automated Dense Reward Function Generation for Reinforcement Learning
+# Text2Reward: Reward Shaping with Language Models for Reinforcement Learning
 
 <p align="left">
     <a href="https://img.shields.io/badge/PRs-Welcome-red">
@@ -10,7 +10,7 @@
     <br/>
 </p>
 
-Code for paper [Text2Reward: Automated Dense Reward Function Generation for Reinforcement Learning](https://arxiv.org/abs/2309.11489).
+Code for paper [Text2Reward: Reward Shaping with Language Models for Reinforcement Learning](https://arxiv.org/abs/2309.11489).
 Please refer to our [project page](https://text-to-reward.github.io/) for more demonstrations and up-to-date related resources. 
 
 
