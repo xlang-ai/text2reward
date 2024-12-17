@@ -118,7 +118,7 @@ If you find our work helpful, please cite us:
 
 ## Contributors
 <a href="https://github.com/Timothyxxx">  <img src="https://avatars.githubusercontent.com/u/47296835?v=4"  width="50" /></a>
-<a href="https://github.com/Hilbert-Johnson">  <img src="https://avatars.githubusercontent.com/u/77528902?v=4"  width="50" /></a>
+<a href="https://github.com/sihengz02">  <img src="https://avatars.githubusercontent.com/u/77528902?v=4"  width="50" /></a>
 <a href="https://github.com/ChenWu98"><img src="https://avatars.githubusercontent.com/u/28187501?v=4"  width="50" /></a>
 <a href="https://github.com/taogoddd">  <img src="https://avatars.githubusercontent.com/u/98326623?v=4"  width="50" /></a>
 <a href="https://qianluo.netlify.app/"><img src="https://avatars.githubusercontent.com/u/58158769?v=4"  width="50" /></a>
